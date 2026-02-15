@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秒速パーセント - 割合計算アプリ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            background: #ffffff;
+            color: #333;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #3498db;
+            color: white;
+        }
+
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-discount { background: #e74c3c; }
+        .btn-discount:hover { background: #c0392b; }
+
+        .btn-reverse { background: #9b59b6; }
+        .btn-reverse:hover { background: #8e44ad; }
+
+        .btn-increase { background: #27ae60; }
+        .btn-increase:hover { background: #229954; }
+
+        .btn-decrease { background: #f39c12; }
+        .btn-decrease:hover { background: #d68910; }
+
+        .btn-tax-in { background: #16a085; }
+        .btn-tax-in:hover { background: #138d75; }
+
+        .btn-tax-out { background: #34495e; }
+        .btn-tax-out:hover { background: #2c3e50; }
+
+        .result-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .result-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .result-detail {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .history-section {
+            margin-top: 30px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .clear-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            background: #e0e0e0;
+            color: #555;
+            border-radius: 6px;
+        }
+
+        .clear-btn:hover {
+            background: #d0d0d0;
+        }
+
+        .history-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .history-calc {
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .history-result {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .empty-history {
+            text-align: center;
+            color: #95a5a6;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 28px;
+            }
+            
+            .result-value {
+                font-size: 36px;
+            }
+            
+            button {
+                font-size: 14px;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ 秒速パーセント</h1>
+        <div class="subtitle">簡単・高速な割合計算アプリ</div>
+    </div>
+
+    <div class="input-section">
+        <div class="input-group">
+            <label for="amount">金額</label>
+            <input type="number" id="amount" placeholder="10000" inputmode="decimal">
+        </div>
+        <div class="input-group">
+            <label for="percentage">パーセント (%)</label>
+            <input type="number" id="percentage" placeholder="20" inputmode="decimal">
+        </div>
+    </div>
+
+    <div class="button-grid">
+        <button class="btn-discount" onclick="calculateDiscount()">○％オフ</button>
+        <button class="btn-reverse" onclick="calculateReverse()">元値逆算</button>
+        <button class="btn-increase" onclick="calculateIncrease()">○％増加</button>
+        <button class="btn-decrease" onclick="calculateDecrease()">○％減少</button>
+        <button class="btn-tax-in" onclick="calculateTaxIn()">税込み計算</button>
+        <button class="btn-tax-out" onclick="calculateTaxOut()">税抜き計算</button>
+    </div>
+
+    <div class="result-section" id="resultSection">
+        <div class="result-label">計算結果がここに表示されます</div>
+        <div class="result-value">-</div>
+    </div>
+
+    <div class="history-section">
+        <div class="history-header">
+            <div class="history-title">📝 計算履歴</div>
+            <button class="clear-btn" onclick="clearHistory()">クリア</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <div class="empty-history">まだ計算履歴がありません</div>
+        </div>
+    </div>
+
+    <script>
+        let history = [];
+
+        function getInputValues() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const percentage = parseFloat(document.getElementById('percentage').value);
+            return { amount, percentage };
+        }
+
+        function displayResult(label, value, detail, calcDescription) {
+            const resultSection = document.getElementById('resultSection');
+            resultSection.innerHTML = `
+                <div class="result-label">${label}</div>
+                <div class="result-value">¥${value.toLocaleString()}</div>
+                ${detail ? `<div class="result-detail">${detail}</div>` : ''}
+            `;
+            
+            addToHistory(calcDescription, value);
+        }
+
+        function addToHistory(calc, result) {
+            history.unshift({
+                calc: calc,
+                result: result,
+                timestamp: new Date()
+            });
+            
+            if (history.length > 10) {
+                history = history.slice(0, 10);
+            }
+            
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<div class="empty-history">まだ計算履歴がありません</div>';
+                return;
+            }
+            
+            historyList.innerHTML = history.map(item => `
+                <div class="history-item">
+                    <div class="history-calc">${item.calc}</div>
+                    <div class="history-result">¥${item.result.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            history = [];
+            updateHistoryDisplay();
+        }
+
+        function calculateDiscount() {
+            const { amount, percentage } = getInputValues();
+            if (isNaN(amount) || isNaN(percentage)) {
+                alert('金額とパーセントを入力してください');
+                return;
+            }
+            
+            const discount = amount * (percentage / 100);
+            const result = amount - discount;
+            
+            displayResult(
+                `${percentage}%オフ`,
+                result,
+                `${amount.toLocaleString()}円から${discount.toLocaleString()}円引き`,
+                `¥${amount.toLocaleString()} の ${percentage}%オフ`
+            );
+        }
+
+        function calculateReverse() {
+            const { amount, percentage } = getInputValues();
+            if (isNaN(amount) || isNaN(percentage)) {
+                alert('金額とパーセントを入力してください');
+                return;
+            }
+            
+            const original = amount / (1 - percentage / 100);
+            
+            displayResult(
+                '元値',
+                original,
+                `${percentage}%オフで${amount.toLocaleString()}円になる元の価格`,
+                `¥${amount.toLocaleString()} (${percentage}%オフ後) の元値`
+            );
+        }
+
+        function calculateIncrease() {
+            const { amount, percentage } = getInputValues();
+            if (isNaN(amount) || isNaN(percentage)) {
+                alert('金額とパーセントを入力してください');
+                return;
+            }
+            
+            const increase = amount * (percentage / 100);
+            const result = amount + increase;
+            
+            displayResult(
+                `${percentage}%増加`,
+                result,
+                `${amount.toLocaleString()}円に${increase.toLocaleString()}円プラス`,
+                `¥${amount.toLocaleString()} の ${percentage}%増加`
+            );
+        }
+
+        function calculateDecrease() {
+            const { amount, percentage } = getInputValues();
+            if (isNaN(amount) || isNaN(percentage)) {
+                alert('金額とパーセントを入力してください');
+                return;
+            }
+            
+            const decrease = amount * (percentage / 100);
+            const result = amount - decrease;
+            
+            displayResult(
+                `${percentage}%減少`,
+                result,
+                `${amount.toLocaleString()}円から${decrease.toLocaleString()}円マイナス`,
+                `¥${amount.toLocaleString()} の ${percentage}%減少`
+            );
+        }
+
+        function calculateTaxIn() {
+            const { amount } = getInputValues();
+            if (isNaN(amount)) {
+                alert('金額を入力してください');
+                return;
+            }
+            
+            const taxRate = 10;
+            const tax = amount * (taxRate / 100);
+            const result = amount + tax;
+            
+            displayResult(
+                '税込み価格',
+                result,
+                `本体${amount.toLocaleString()}円 + 消費税${tax.toLocaleString()}円`,
+                `¥${amount.toLocaleString()} の税込み (10%)`
+            );
+        }
+
+        function calculateTaxOut() {
+            const { amount } = getInputValues();
+            if (isNaN(amount)) {
+                alert('金額を入力してください');
+                return;
+            }
+            
+            const taxRate = 10;
+            const result = amount / (1 + taxRate / 100);
+            const tax = amount - result;
+            
+            displayResult(
+                '税抜き価格',
+                result,
+                `税込み${amount.toLocaleString()}円から消費税${tax.toLocaleString()}円を引いた本体価格`,
+                `¥${amount.toLocaleString()} の税抜き (10%)`
+            );
+        }
+
+        // リアルタイム計算のためのイベントリスナー
+        document.getElementById('amount').addEventListener('input', function() {
+            // 入力時の処理（必要に応じて）
+        });
+
+        document.getElementById('percentage').addEventListener('input', function() {
+            // 入力時の処理（必要に応じて）
+        });
+    </script>
+</body>
+</html>
